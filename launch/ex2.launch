@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+    
+    <node pkg="mp_pcl" type="ex2" name="ex2" output="screen"/>
+
+    <!-- Rviz -->
+    <node launch-prefix="nice" pkg="rviz" type="rviz" name="rviz" args="-d $(find mp_pcl)/rviz/config_ex2.rviz" />
+
+</launch>
