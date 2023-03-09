@@ -52,11 +52,11 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
         range_img.at<float>(height, width) = range;
     }
 
-    // Convert image to CV_8UC1
-    range_img.convertTo(range_img, CV_8UC1);
-
     // TODO: Normalize range_img to 0 - 255
     // cv::normalize();
+
+    // Convert image to CV_8UC1
+    range_img.convertTo(range_img, CV_8UC1);
 
     cv_bridge::CvImage out_msg;
     out_msg.header   = input->header; // Same timestamp and tf frame as input image
