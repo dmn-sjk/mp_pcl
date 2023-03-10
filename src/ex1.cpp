@@ -46,6 +46,8 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
 
 
         // TODO: Limit the range value
+
+        // TODO: Reject points/pixels outside image size 
     
 
         // Set the range value in the pixel of an image
