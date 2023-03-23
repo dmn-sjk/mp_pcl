@@ -18,6 +18,8 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
 
     float SCANNER_COLS = 1024;
     float SCANNER_ROWS = 128;
+    float vert_max = 22.5 * M_PI / 180.0;
+    float vert_min = -22.5 * M_PI / 180.0;
     
     // Create range image
     cv::Mat range_img = cv::Mat(SCANNER_ROWS, SCANNER_COLS, CV_32FC1);
@@ -33,27 +35,36 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
             !std::isfinite(point.z))
             continue;
             
-        // TODO: Calculate horizontal and vertical angle of the laser beam
-
-
         // TODO: Calculate the range value
-        float range = 0;
+        float range = sqrt(pow(point.x, 2) + pow(point.y, 2) + pow(point.z, 2));
+
+        float d = sqrt(pow(point.x, 2) + pow(point.y, 2));
+
+        // TODO: Calculate horizontal and vertical angle of the laser beam
+        float horiz_angle = atan2(point.y, point.x);
+        float vert_angle = atan2(point.z, d);
 
 
         // TODO: Calculate the pixel location in the image                                                 
-        float height = 0;
-        float width = 0;
-
+        float width = 0.5 * SCANNER_COLS - (horiz_angle / M_PI) * (SCANNER_COLS / 2);
+        float height = (vert_max - vert_angle) / (vert_max - vert_min) * SCANNER_ROWS;
 
         // TODO: Limit the range value
-    
+        if (range > 50) {
+            range = 50;
+        }
+
+        // TODO: Reject points/pixels outside image size    
+        if (height >= SCANNER_ROWS || height < 0 || width >= SCANNER_COLS || width < 0){
+            continue;
+        }                                               
 
         // Set the range value in the pixel of an image
         range_img.at<float>(height, width) = range;
     }
 
     // TODO: Normalize range_img to 0 - 255
-    // cv::normalize();
+    cv::normalize(range_img, range_img, 0, 255, cv::NORM_MINMAX);
 
     // Convert image to CV_8UC1
     range_img.convertTo(range_img, CV_8UC1);
