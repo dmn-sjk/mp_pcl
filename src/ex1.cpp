@@ -16,11 +16,13 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
     pcl::PointCloud<pcl::PointXYZI>::Ptr cloud (new pcl::PointCloud<pcl::PointXYZI>);
     pcl::fromROSMsg(*input, *cloud);
 
-    float SCANNER_COLS = 1024;
-    float SCANNER_ROWS = 128;
+    uint16_t w = 1024;
+    uint16_t h = 128;
+    float phi_up = 22.5 * M_PI / 180.0; // to radians
+    float phi_down = -22.5 * M_PI / 180.0; // to radians
     
     // Create range image
-    cv::Mat range_img = cv::Mat(SCANNER_ROWS, SCANNER_COLS, CV_32FC1);
+    cv::Mat range_img = cv::Mat(h, w, CV_32FC1);
     range_img = 0;
 
     for (int idx = 0; idx < cloud->points.size(); idx++) {
@@ -34,24 +36,24 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
             continue;
             
         // TODO: Calculate horizontal and vertical angle of the laser beam
-
+        float theta;
+        float phi;
 
         // TODO: Calculate the range value
-        float range = 0;
-
+        float range;
 
         // TODO: Calculate the pixel location in the image                                                 
-        float height = 0;
-        float width = 0;
-
+        uint16_t u;
+        uint16_t v;
 
         // TODO: Limit the range value
 
+
         // TODO: Reject points/pixels outside image size 
-    
+
 
         // Set the range value in the pixel of an image
-        range_img.at<float>(height, width) = range;
+        range_img.at<float>(v, u) = range;
     }
 
     // TODO: Normalize range_img to 0 - 255
