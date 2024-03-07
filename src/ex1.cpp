@@ -18,8 +18,8 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
 
     uint16_t w = 1024;
     uint16_t h = 128;
-    float phi_up = 22.5 * M_PI / 180.0; // to radians
-    float phi_down = -22.5 * M_PI / 180.0; // to radians
+    float phi_up = 22.5 * M_PI / 180.0; // radians
+    float phi_down = -22.5 * M_PI / 180.0; // radians
     
     // Create range image
     cv::Mat range_img = cv::Mat(h, w, CV_32FC1);
@@ -56,7 +56,7 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
         range_img.at<float>(v, u) = range;
     }
 
-    // TODO: Normalize range_img to 0 - 255
+    // TODO: Normalize the pixel values of range_img to 0 - 255
     // cv::normalize();
 
     // Convert image to CV_8UC1

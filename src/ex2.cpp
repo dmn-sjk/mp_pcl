@@ -19,22 +19,66 @@ ros::Publisher cones_pub;
 ros::Publisher processed_cloud_pub;
 
 void filter(const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud) {
-    // TODO
+    pcl::VoxelGrid<pcl::PointXYZ> filter;
+
+    // TODO: Set input cloud and leaf size
+
+    filter.filter(*cloud);
 }
 
 void remove_ground(const pcl::PointCloud<pcl::PointXYZ>::Ptr &cloud) {
-    // TODO
+    pcl::ModelCoefficients::Ptr coefficients (new pcl::ModelCoefficients);
+    pcl::PointIndices::Ptr inliers (new pcl::PointIndices); // indices of point clusters inside point cloud
+    pcl::SACSegmentation<pcl::PointXYZ> sac;
+
+    // TODO: Set model type (plane), set method type (RANSAC), set distance threshold, set input cloud
+
+    sac.segment(*inliers, *coefficients);
+
+
+    pcl::ExtractIndices<pcl::PointXYZ> extract;
+
+    // TODO: Set input cloud, set indices, use setNegative function to retrieve only the points that are not inliers (not on the ground plane)
+
+    extract.filter(*cloud);
 }
 
 void get_cluster_indices(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud,
                          std::vector<pcl::PointIndices> &output_cluster_indices) {
-    // TODO
+
+    // fast data structure for search and retrieval of point inside the point cloud
+    pcl::search::KdTree<pcl::PointXYZ>::Ptr kdtree (new pcl::search::KdTree<pcl::PointXYZ>);
+    kdtree->setInputCloud(cloud);
+
+    pcl::EuclideanClusterExtraction<pcl::PointXYZ> ec;
+    ec.setSearchMethod(kdtree);
+
+    // TODO: Set input cloud, set cluster tolerance, set min cluster size, set max cluster size
+
+    ec.extract(output_cluster_indices);
 }
 
 void get_cones_centers_cloud(const pcl::PointCloud<pcl::PointXYZ>::ConstPtr &cloud,
                              const std::vector<pcl::PointIndices> &cluster_indices,
                              const pcl::PointCloud<pcl::PointXYZ>::Ptr &output_cones_cloud) {
-    // TODO
+    // for each cluster of points
+    for (std::vector<pcl::PointIndices>::const_iterator it = cluster_indices.begin(); it != cluster_indices.end(); ++it) {
+        pcl::CentroidPoint<pcl::PointXYZ> centroid;
+        pcl::PointXYZ centroid_point;
+
+        // for each point inside the cluster
+        for (const auto& idx : it->indices) {
+            pcl::PointXYZ point = (*cloud)[idx];
+
+            // TODO: add point to the centroid object
+
+        }
+
+        // TODO: assign a centroid point to centroid_point variable
+
+
+        output_cones_cloud->push_back(centroid_point);
+    }
 }
 
 void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
