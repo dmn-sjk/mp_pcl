@@ -14,6 +14,7 @@
 #include <pcl/segmentation/sac_segmentation.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl/segmentation/extract_clusters.h>
+#include <pcl/common/centroid.h>
 
 ros::Publisher cones_pub;
 ros::Publisher processed_cloud_pub;
