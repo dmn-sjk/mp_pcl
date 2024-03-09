@@ -34,13 +34,13 @@ void cloud_cb (const sensor_msgs::PointCloud2ConstPtr& input) {
             !std::isfinite(point.y) ||
             !std::isfinite(point.z))
             continue;
-            
-        // TODO: Calculate horizontal and vertical angle of the laser beam
-        float theta;
-        float phi;
 
         // TODO: Calculate the range value
         float range;
+
+        // TODO: Calculate horizontal and vertical angle of the laser beam
+        float theta;
+        float phi;
 
         // TODO: Calculate the pixel location in the image                                                 
         uint16_t u;
